@@ -1,4 +1,5 @@
 // auth.js
+
 const express = require('express');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
@@ -39,10 +40,13 @@ function authenticateToken(req, res, next) {
     if (!token) {
         return res.status(401).json({ message: 'Unauthorized' });
     }
+    // Verify JWT token
     jwt.verify(token, process.env.JWT_SECRET, (err, user) => {
         if (err) {
+            console.error('JWT verification error:', err); // Log JWT verification error
             return res.status(403).json({ message: 'Forbidden' });
         }
+        console.log('Decoded JWT payload:', user); // Log decoded JWT payload
         req.user = user;
         next();
     });
